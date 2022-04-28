@@ -1,7 +1,12 @@
 import type { NextPage } from "next";
-
+import Head from "next/head";
+import Register from "../components/Register";
 const Home: NextPage = () => {
-  return <h1 className="text-3xl font-bold underline">Hello world!</h1>;
+  return (
+    <div>
+      <Register />
+    </div>
+  );
 };
 
 export default Home;
