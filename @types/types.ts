@@ -16,9 +16,9 @@ export interface BLOG_POST {
   title: string;
   content: string;
   user: number;
-  tags: TAG[];
+  tags: TAG_POST[];
   is_active: boolean;
-  image: File | null;
+  image: any;
 }
 
 export interface LOGIN_USER {

@@ -33,10 +33,12 @@ const CreateBlog: React.FC = () => {
   const [option, setOption] = useState("下書き");
   const [inputTag, setInputTag] = useState("");
   const [tagList, setTagList] = useState<TAG[]>();
+  const [img, setImg] = useState<any>();
 
   const [createObjectURL, setCreateObjectURL] = useState("");
   const [loginUser, setLoginUser] = useState<LOGIN_USER>(initLoginUser);
   const [error, setError] = useState("");
+
   //投稿or下書き保存toggle
   const getSelectedValue = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
@@ -52,13 +54,6 @@ const CreateBlog: React.FC = () => {
     const value = e.target.value;
     setInputTag(value);
     AsyncGetTags();
-  };
-  const uploadToClient = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const i: any = e.target.files[0];
-      setInputState({ ...inputState, image: i });
-      setCreateObjectURL(URL.createObjectURL(i));
-    }
   };
 
   const handleInputChange = (
@@ -111,8 +106,69 @@ const CreateBlog: React.FC = () => {
   };
   useEffect(() => {
     getLoginUser();
-  }, []);
-  console.log(inputState.tags);
+  }, [inputState.title]);
+
+  const AsyncBlogPost = async () => {
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_RESTAPI_URL}api/create-blog/`,
+        inputState,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `JWT ${cookie.get("access_token")}`,
+          },
+        }
+      );
+      if (res.data) {
+        console.log(res.data);
+        const formData = new FormData();
+        formData.append("image", img);
+        const image_res = await axios.patch(
+          `${process.env.NEXT_PUBLIC_RESTAPI_URL}api/create-blog/${res.data.id}/`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `JWT ${cookie.get("access_token")}`,
+            },
+          }
+        );
+        console.log(image_res);
+      }
+    } catch {
+      (e: any) => {
+        if (e.response && e.response.status === 400) {
+          return console.log(e.response);
+        } else if (e.response.status === 401) {
+          setError("トークンが切れました。再度ログインしてください。");
+          router.push("/");
+        }
+      };
+    }
+  };
+
+  const uploadToClient = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setImg(e.target.files[0]);
+      //   setInputState({ ...inputState, image:  });
+      //   setCreateObjectURL(URL.createObjectURL(e.target.files[0]));
+    }
+    console.log(img);
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    const array: TAG_POST[] = [];
+    inputState.tags.map((tag: any) => {
+      array.push(tag.id);
+    });
+    setInputState((inputState.tags = array));
+    await AsyncBlogPost();
+    setInputState(initState);
+    setTagList([]);
+  };
 
   return (
     <>
@@ -122,7 +178,7 @@ const CreateBlog: React.FC = () => {
       <h2 className="my-3">null</h2>
 
       <div>
-        <form>
+        <form onSubmit={handleSubmit}>
           <input
             type="text"
             className="border rounded-sm w-full p-1 outline-none focus:border-gray-400 mb-0.5 mx-0.5"
@@ -149,8 +205,7 @@ const CreateBlog: React.FC = () => {
                   >
                     <button
                       type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
+                      onClick={() => {
                         setInputState({
                           ...inputState,
                           tags: [tag, ...inputState.tags],
@@ -167,7 +222,7 @@ const CreateBlog: React.FC = () => {
           </ul>
           <div className="border-b">
             {inputState.tags &&
-              inputState.tags.map((tag, index) => (
+              inputState.tags.map((tag: any, index) => (
                 <Tag
                   tag={tag}
                   index={index}
@@ -198,35 +253,41 @@ const CreateBlog: React.FC = () => {
             </div>
           </div>
           <div>
-            <input type="file" name="image" onChange={uploadToClient} />
+            <input
+              type="file"
+              name="image"
+              onChange={uploadToClient}
+              multiple
+            />
+          </div>
+
+          <div className="absolute bottom-0 border w-full h-16 bg-gray-700 flex items-center justify-end">
+            <div className="py-2 mx-6">
+              <select
+                onChange={getSelectedValue}
+                className="outline-none w-5 h-8 pr-6 bg-teal-500"
+              >
+                <option value="下書き">下書き保存</option>
+                <option value="投稿">投稿</option>
+              </select>
+              {option === "下書き" ? (
+                <button
+                  type="submit"
+                  className=" bg-teal-500 text-white py-1 px-2 w-56"
+                >
+                  下書き保存
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  className=" bg-teal-500 text-white py-1 px-2  w-56"
+                >
+                  投稿
+                </button>
+              )}
+            </div>
           </div>
         </form>
-      </div>
-      <div className="absolute bottom-0 border w-full h-16 bg-gray-700 flex items-center justify-end">
-        <div className="py-2 mx-6">
-          <select
-            onChange={getSelectedValue}
-            className="outline-none w-5 h-8 pr-6 bg-teal-500"
-          >
-            <option value="下書き">下書き保存</option>
-            <option value="投稿">投稿</option>
-          </select>
-          {option === "下書き" ? (
-            <button
-              type="submit"
-              className=" bg-teal-500 text-white py-1 px-2 w-56"
-            >
-              下書き保存
-            </button>
-          ) : (
-            <button
-              type="submit"
-              className=" bg-teal-500 text-white py-1 px-2  w-56"
-            >
-              投稿
-            </button>
-          )}
-        </div>
       </div>
     </>
   );
