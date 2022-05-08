@@ -4,6 +4,7 @@ import { CRED, TAG, TAG_POST, BLOG_POST } from "../@types/types";
 import axios from "axios";
 import Cookie from "universal-cookie";
 import { useRouter } from "next/router";
+import Layout from "../components/Layout";
 
 const cookie = new Cookie();
 

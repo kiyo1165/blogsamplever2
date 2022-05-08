@@ -26,3 +26,15 @@ export interface LOGIN_USER {
   email: string;
   name: string;
 }
+
+export interface GET_BLOGS {
+  id: number;
+  title: string;
+  user: number;
+  username: string;
+  tags: TAG[];
+  content: string;
+  is_active: true;
+  image: File | any;
+  created_at: string;
+}

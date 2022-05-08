@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable react/no-children-prop */
 import Head from "next/head";
-import { TAG, TAG_POST, BLOG_POST, LOGIN_USER } from "../@types/types";
+import { TAG, BLOG_POST, LOGIN_USER } from "../@types/types";
 import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -9,8 +9,7 @@ import { useRouter } from "next/router";
 import CodeBlock from "../components/CodeBlock";
 import axios from "axios";
 import Cookies from "universal-cookie";
-import { takeCoverage } from "v8";
-import { appendFile } from "fs/promises";
+
 import Tag from "../components/Tag";
 
 const cookie = new Cookies();
@@ -101,7 +100,7 @@ const CreateBlog: React.FC = () => {
       }
     } catch (e: any) {
       setError(e);
-      router.push("/");
+      router.push("/register");
     }
   };
   useEffect(() => {
@@ -121,7 +120,6 @@ const CreateBlog: React.FC = () => {
         }
       );
       if (res.data) {
-        console.log(res.data);
         const formData = new FormData();
         formData.append("image", img);
         const image_res = await axios.patch(
@@ -159,8 +157,7 @@ const CreateBlog: React.FC = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
-    const array: TAG_POST[] = [];
+    const array: any = [];
     inputState.tags.map((tag: any) => {
       array.push(tag.id);
     });
