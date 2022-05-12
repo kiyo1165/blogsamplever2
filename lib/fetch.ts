@@ -6,7 +6,7 @@ export const getAllPosts = async () => {
     `${process.env.NEXT_PUBLIC_RESTAPI_URL}api/get-blogs/`
   );
   const posts = await res.json();
-  posts.filter((post: { is_active: boolean }) => post.is_active === true);
+
   return posts;
 };
 
@@ -15,8 +15,8 @@ export const getAllIds = async () => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_RESTAPI_URL}api/get-blogs/`
   );
-  const posts: any = await res.json();
-  return posts.map((post: GET_BLOGS) => {
+  const posts: GET_BLOGS[] = await res.json();
+  return posts.map((post) => {
     return {
       params: {
         id: String(post.id),
@@ -29,7 +29,7 @@ export const getPostDetail = async (id: string) => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_RESTAPI_URL}api/get-blogs/${id}/`
   );
-  const posts: any = await res.json();
+  const posts = await res.json();
   return posts;
 };
 

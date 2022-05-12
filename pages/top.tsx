@@ -4,19 +4,19 @@ import Image from "next/image";
 import { GetStaticProps, GetStaticPaths } from "next";
 import { getAllPosts, getAllIds } from "../lib/fetch";
 import { GET_BLOGS } from "../@types/types";
-import Post from "../components/Post";
 import { useEffect } from "react";
-
+import Post from "../components/Post";
 export interface STATICPROPS {
   posts: GET_BLOGS[];
 }
 
 const Top: React.FC<STATICPROPS> = ({ posts }) => {
+  console.log(posts);
   let filterdPosts = posts.sort(
     (
-      a: { created_at: string | number | Date },
-      b: { created_at: string | number | Date }
-    ) => new Date(a.created_at) - new Date(b.created_at)
+      a: { created_at: string | number | bigint | any },
+      b: { created_at: string | number | Date | any }
+    ) => (new Date(b.created_at) as any) - (new Date(a.created_at) as any)
   );
 
   return (
@@ -62,24 +62,7 @@ const Top: React.FC<STATICPROPS> = ({ posts }) => {
                   </li>
                 ))}
               </ul>
-              <p className="h-30 line-clamp-3">{filterdPosts[0].content}</p>
-              <Link
-                href="/posts/[id]"
-                as={`/posts/${filterdPosts[0].id}`}
-                passHref
-              >
-                <a className="text-gray-500 inline-flex items-center mt-2 text-xs hover:underline cursor-pointer">
-                  Learn More
-                  <svg
-                    className="w-4 h-4 ml-2"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path d="M5 12h14"></path>
-                    <path d="M12 5l7 7-7 7"></path>
-                  </svg>
-                </a>
-              </Link>
+
               <p className="text-right text-xs my-2 text-opacity-70">
                 {filterdPosts[0].created_at}
               </p>
