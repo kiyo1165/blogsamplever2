@@ -1,15 +1,16 @@
 import Head from "next/head";
 import React, { useState, useEffect } from "react";
-import { CRED, TAG, TAG_POST, BLOG_POST } from "../@types/types";
+import { CRED } from "../@types/types";
 import axios from "axios";
 import Cookie from "universal-cookie";
 import { useRouter } from "next/router";
-import Layout from "../components/Layout";
+import { useStateContext } from "../context/context";
 
 const cookie = new Cookie();
 
 const Register: React.FC = () => {
   const router = useRouter();
+  const { setIsLogin } = useStateContext();
   const initCredState: CRED = {
     email: "",
     password: "",
@@ -52,6 +53,7 @@ const Register: React.FC = () => {
       if (res.status === 200) {
         const options = { path: "/" };
         cookie.set("access_token", res.data.access, options);
+        setIsLogin(true);
         router.push("/create-blog");
       }
     } catch {

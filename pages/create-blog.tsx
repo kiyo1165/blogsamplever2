@@ -149,10 +149,7 @@ const CreateBlog: React.FC = () => {
   const uploadToClient = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setImg(e.target.files[0]);
-      //   setInputState({ ...inputState, image:  });
-      //   setCreateObjectURL(URL.createObjectURL(e.target.files[0]));
     }
-    console.log(img);
   };
 
   const handleSubmit = async (e: any) => {
