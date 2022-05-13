@@ -105,7 +105,7 @@ const CreateBlog: React.FC = () => {
   };
   useEffect(() => {
     getLoginUser();
-  }, [inputState.title]);
+  }, []);
 
   const AsyncBlogPost = async () => {
     try {
