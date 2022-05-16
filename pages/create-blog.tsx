@@ -9,10 +9,11 @@ import { useRouter } from "next/router";
 import CodeBlock from "../components/CodeBlock";
 import axios from "axios";
 import Cookies from "universal-cookie";
-
 import Tag from "../components/Tag";
+import useSWR from "swr";
 
 const cookie = new Cookies();
+
 const CreateBlog: React.FC = () => {
   const router = useRouter();
   const initState: BLOG_POST = {
@@ -34,9 +35,20 @@ const CreateBlog: React.FC = () => {
   const [tagList, setTagList] = useState<TAG[]>();
   const [img, setImg] = useState<any>();
 
-  const [createObjectURL, setCreateObjectURL] = useState("");
   const [loginUser, setLoginUser] = useState<LOGIN_USER>(initLoginUser);
-  const [error, setError] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  // const apiUrl = `${process.env.NEXT_PUBLIC_RESTAPI_URL}api/self_user/`;
+  // const fetcher = async (url: any) => {
+  //   const res = await axios.get(url, {
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Authorization: `JWT ${cookie.get("access_token")}`,
+  //     },
+  //   });
+  //   return res.data;
+  // };
+  // const { data, mutate } = useSWR(apiUrl, fetcher);
 
   //投稿or下書き保存toggle
   const getSelectedValue = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -64,6 +76,7 @@ const CreateBlog: React.FC = () => {
     setInputState({
       ...inputState,
       [name]: e.target.value,
+      user: loginUser.id,
     });
   };
 
@@ -83,28 +96,30 @@ const CreateBlog: React.FC = () => {
     }
   };
 
-  const getLoginUser = async () => {
-    try {
-      const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_RESTAPI_URL}api/self_user/`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `JWT ${cookie.get("access_token")}`,
-          },
-        }
-      );
-      if (res.status === 200) {
-        setLoginUser(res.data);
-        setInputState({ ...inputState, user: loginUser.id });
-      }
-    } catch (e: any) {
-      setError(e);
-      router.push("/register");
-    }
-  };
   useEffect(() => {
+    const getLoginUser = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_RESTAPI_URL}api/self_user/`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `JWT ${cookie.get("access_token")}`,
+            },
+          }
+        );
+
+        if (res.status === 200) {
+          setLoginUser(res.data);
+        }
+      } catch (e: any) {
+        setErrorMessage(e);
+        router.push("/register");
+      }
+    };
     getLoginUser();
+    setInputState({ ...inputState, user: loginUser.id });
+    console.log(inputState);
   }, []);
 
   const AsyncBlogPost = async () => {
@@ -132,14 +147,13 @@ const CreateBlog: React.FC = () => {
             },
           }
         );
-        console.log(image_res);
       }
     } catch {
       (e: any) => {
         if (e.response && e.response.status === 400) {
           return console.log(e.response);
         } else if (e.response.status === 401) {
-          setError("トークンが切れました。再度ログインしてください。");
+          setErrorMessage("トークンが切れました。再度ログインしてください。");
           router.push("/");
         }
       };
@@ -154,6 +168,9 @@ const CreateBlog: React.FC = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setInputState({ ...inputState, user: loginUser.id });
+    console.log(inputState);
+
     const array: any = [];
     inputState.tags.map((tag: any) => {
       array.push(tag.id);

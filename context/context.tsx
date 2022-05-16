@@ -1,5 +1,9 @@
 import { useContext, useState, createContext, ReactNode } from "react";
 
+import axios from "axios";
+import Cookies from "universal-cookie";
+
+const cookie = new Cookies();
 const StateContext = createContext(
   {} as {
     isLogin: boolean;
