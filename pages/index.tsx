@@ -5,9 +5,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { GetStaticProps } from "next";
 import { getAllPosts } from "../lib/fetch";
-import { GET_BLOGS } from "../@types/types";
+import { GET_BLOGS, TAG } from "../@types/types";
 import Post from "../components/Post";
 import useSWR from "swr";
+import { useEffect } from "react";
+import type { SWRConfiguration } from "swr";
 export interface STATICPROPS {
   posts: GET_BLOGS[];
 }
@@ -16,15 +18,20 @@ const fetcher = (url: any) => fetch(url).then((res) => res.json);
 const apiUrl = `${process.env.NEXT_PUBLICK_RESTAPI_URL}/api/get-blogs/`;
 
 const Home: NextPage<STATICPROPS> = ({ posts }) => {
-  // const { data: blogs, mutate } = useSWR(apiUrl, fetcher, {
-  //   initData: posts,
-  // });
-  const filterdPosts = posts.sort(
+  const config: SWRConfiguration = {
+    fallbackData: posts,
+  };
+  const { data: blogs, mutate } = useSWR(apiUrl, fetcher, config);
+  const filterdPosts = blogs.sort(
     (
       a: { created_at: string | number | bigint | any },
       b: { created_at: string | number | Date | any }
     ) => (new Date(b.created_at) as any) - (new Date(a.created_at) as any)
   );
+
+  useEffect(() => {
+    mutate();
+  }, []);
 
   return (
     <>
@@ -54,7 +61,7 @@ const Home: NextPage<STATICPROPS> = ({ posts }) => {
               </Link>
 
               <ul className="flex flex-row my-5">
-                {filterdPosts[0].tags.map((tag) => (
+                {filterdPosts[0].tags.map((tag: TAG) => (
                   <li
                     key={tag.id}
                     className="border rounded-md bg-black text-xs text-white py-1 px-2 last:mr-0 mr-1"
