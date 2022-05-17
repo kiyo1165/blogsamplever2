@@ -5,6 +5,9 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    container: {
+      center: true,
+    },
     colors: ({ colors }) => ({
       inherit: colors.inherit,
       current: colors.current,

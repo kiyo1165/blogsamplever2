@@ -31,7 +31,6 @@ export default TagsFilter;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const paths = await getAllTagIds();
-  // console.log(paths);
   return {
     paths,
     fallback: true,

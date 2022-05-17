@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { ReactNode } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import { useStateContext } from "../context/context";
@@ -39,11 +40,17 @@ const Layout: React.FC<PROPS> = ({ children, title = "" }) => {
       </Head>
       <header>
         <nav className="relative flex flex-wrap items-center justify-between px-2 py-3 mb-3">
-          <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
+          <div className="container px-4 mx-auto flex flex-wrap items-center justify-between m-2 max-w-[1025px]">
             <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
               <Link href="/">
-                <a className="text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-black">
-                  The Quest Love Blog
+                <a>
+                  <Image
+                    src="/Quest Love - MarkMaker Logo.svg"
+                    width={135}
+                    height={135}
+                    alt="Quest Love"
+                    quality={100}
+                  />
                 </a>
               </Link>
 
@@ -81,7 +88,7 @@ const Layout: React.FC<PROPS> = ({ children, title = "" }) => {
                     className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-black hover:opacity-75"
                     href="#pablo"
                   >
-                    <span className="ml-2">Share</span>
+                    <span className="ml-2">Profile</span>
                   </a>
                 </li>
                 <li className="nav-item">
@@ -89,7 +96,7 @@ const Layout: React.FC<PROPS> = ({ children, title = "" }) => {
                     className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-black hover:opacity-75"
                     href="#pablo"
                   >
-                    <span className="ml-2">Tweet</span>
+                    <span className="ml-2">Contact</span>
                   </a>
                 </li>
                 {isLogin ? (
@@ -108,7 +115,9 @@ const Layout: React.FC<PROPS> = ({ children, title = "" }) => {
           </div>
         </nav>
       </header>
-      <main className="">{children}</main>
+      <main className="container max-w-[1025px] grid grid-cols-5">
+        {children}
+      </main>
       <footer></footer>
     </div>
   );

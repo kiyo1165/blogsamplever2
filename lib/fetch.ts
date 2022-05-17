@@ -6,7 +6,12 @@ export const getAllPosts = async () => {
     `${process.env.NEXT_PUBLIC_RESTAPI_URL}api/get-blogs/`
   );
   const posts = await res.json();
-
+  // const filterdPosts = posts.sort(
+  //   (
+  //     a: { created_at: string | number | bigint | any },
+  //     b: { created_at: string | number | Date | any }
+  //   ) => (new Date(b.created_at) as any) - (new Date(a.created_at) as any)
+  // );
   return posts;
 };
 
