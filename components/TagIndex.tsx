@@ -5,7 +5,7 @@ const TagIndex: React.FC<any> = () => {
   const { tagData } = useStateContext();
   return (
     <>
-      <h4>記事</h4>
+      <h4>TAG</h4>
       <ul>
         {Object.entries(tagData).map((item: any, i) => (
           <li
