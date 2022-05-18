@@ -186,7 +186,6 @@ const CreateBlog: React.FC = () => {
       <Head>
         <title>Createblog</title>
       </Head>
-      <h2 className="my-3">null</h2>
 
       <div>
         <form onSubmit={handleSubmit}>

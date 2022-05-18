@@ -1,11 +1,9 @@
-import Layout from "../../components/Layout";
 import { getAllTagIds, getTagFillterdPosts } from "../../lib/fetch";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { GET_BLOGS } from "../../@types/types";
-import { useRouter } from "next/router";
-import Image from "next/image";
-import TagPost from "../../components/TagPost";
+import Post from "../../components/Post";
 import Head from "next/head";
+import RightSideBar from "../../components/RightSideBar";
 
 const TagsFilter: React.FC<GET_BLOGS[] | any> = ({ posts }) => {
   return (
@@ -13,15 +11,12 @@ const TagsFilter: React.FC<GET_BLOGS[] | any> = ({ posts }) => {
       <Head>
         <title>タグ検索</title>
       </Head>
-      <div className="container max-w-4xl  md:mx-auto px-8">
-        <section className="text-gray-600 body-font overflow-hidden">
-          <div className="container px-5 py-12 mx-auto">
-            <div className="my-4 divide-y-2">
-              {posts &&
-                posts.map((post: any) => <TagPost key={post.id} post={post} />)}
-            </div>
-          </div>
+      <div className="container max-w-[1025px] grid grid-cols-5">
+        <section className="text-gray-800 body-font overflow-hidden col-span-4">
+          {posts &&
+            posts.map((post: any) => <Post key={post.id} post={post} />)}
         </section>
+        <RightSideBar />
       </div>
     </>
   );

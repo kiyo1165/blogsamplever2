@@ -115,9 +115,7 @@ const Layout: React.FC<PROPS> = ({ children, title = "" }) => {
           </div>
         </nav>
       </header>
-      <main className="container max-w-[1025px] grid grid-cols-5">
-        {children}
-      </main>
+      <main>{children}</main>
       <footer></footer>
     </div>
   );
