@@ -37,6 +37,10 @@ const Layout: React.FC<PROPS> = ({ children, title = "" }) => {
     <div className="flex flex-col min-h-screen">
       <Head>
         <title>{title}</title>
+        <meta
+          name="google-site-verification"
+          content="qZpumRKZ042TvfQQ8FfCV20kOL40Uy1Hi_amDCPnYCQ"
+        />
       </Head>
       <header>
         <nav className="relative flex flex-wrap items-center justify-between px-2 py-3 mb-3">
