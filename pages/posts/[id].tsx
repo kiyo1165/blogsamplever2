@@ -34,6 +34,7 @@ const Blog: React.FC<GET_BLOGS | any> = ({
               width={450}
               height={400}
               className="mr-4 cursor-pointer"
+              objectFit="contain"
             />
           </div>
         </div>

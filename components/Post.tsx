@@ -12,6 +12,7 @@ const Post: React.FC<GET_BLOGS | any> = ({ post }) => {
           width={120}
           height={100}
           className="w-120 mr-10"
+          objectFit="contain"
         />
 
         <div className="w-200 max-w-lg ml-4">

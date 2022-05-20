@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["nextjsblog-for-api.herokuapp.com"],
+    domains: ["127.0.0.1"],
   },
 };
 
